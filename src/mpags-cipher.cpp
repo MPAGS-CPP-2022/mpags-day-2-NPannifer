@@ -1,51 +1,32 @@
 #include <cctype>
+#include <vector>
 #include <iostream>
 #include <string>
-#include <vector>
-using namespace std;
+
+
+#include "TransformChar.hpp"
+#include "processCommandLine.hpp"
+
+
+std::string transformChar( const char in_char );
+
+
 
 int main(int argc, char* argv[])
 {
-    const vector<string> cmdLineArgs{argv, argv + argc};
-    const size_t nCmdLineArgs{cmdLineArgs.size()};
+    const std::vector<std::string> cmdLineArgs{argv, argv + argc};
 
     bool helpRequested{false};
     bool versionRequested{false};
-    string inputFile{""};
-    string outputFile{""};
+    std::string inputFile{""};
+    std::string outputFile{""};
 
-    for (size_t i{1}; i < nCmdLineArgs; ++i) {
-        if (cmdLineArgs[i] == "-h" || cmdLineArgs[i] == "--help") {
-            helpRequested = true;
-        } else if (cmdLineArgs[i] == "--version") {
-            versionRequested = true;
-        } else if (cmdLineArgs[i] == "-i") {
-            if (i == nCmdLineArgs - 1) {
-                cerr << "[error] -i requires a filename argument"
-                          << endl;
-                return 1;
-            } else {
-                inputFile = cmdLineArgs[i + 1];
-                ++i;
-            }
-        } else if (cmdLineArgs[i] == "-o") {
-            if (i == nCmdLineArgs - 1) {
-                cerr << "[error] -o requires a filename argument"
-                          << endl;
-                return 1;
-            } else {
-                outputFile = cmdLineArgs[i + 1];
-                ++i;
-            }
-        } else {
-            cerr << "[error] unknown argument '" << cmdLineArgs[i]
-                      << "'\n";
-            return 1;
-        }
-    }
+    bool commandLineArgValid{processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile)};
+    if(!commandLineArgValid){std::exit(-1);}
 
     if (helpRequested) {
-        cout
+
+        std::cout
             << "Usage: mpags-cipher [-h/--help] [--version] [-i <file>] [-o <file>]\n\n"
             << "Encrypts/Decrypts input alphanumeric text using classical ciphers\n\n"
             << "Available options:\n\n"
@@ -55,71 +36,39 @@ int main(int argc, char* argv[])
             << "                   Stdin will be used if not supplied\n\n"
             << "  -o FILE          Write processed text to FILE\n"
             << "                   Stdout will be used if not supplied\n\n"
-            << endl;
+            << std::endl;
         return 0;
     }
 
     if (versionRequested) {
-        cout << "0.1.0" << endl;
+        std::cout << "0.3.0" << std::endl;
         return 0;
     }
 
+    std::cout << inputFile << "    " << outputFile << std::endl;
+
     char inputChar{'x'};
-    string inputText;
+    std::string inputText;
+
 
     if (!inputFile.empty()) {
-        cerr << "[warning] input from file ('" << inputFile
+        std::cerr << "[warning] input from file ('" << inputFile
                   << "') not implemented yet, using stdin\n";
     }
 
-    while (cin >> inputChar) {
 
-        if (isalpha(inputChar)) {
-            inputText += toupper(inputChar);
-            continue;
-        }
+    while (std::cin >> inputChar) {
 
-        switch (inputChar) {
-            case '0':
-                inputText += "ZERO";
-                break;
-            case '1':
-                inputText += "ONE";
-                break;
-            case '2':
-                inputText += "TWO";
-                break;
-            case '3':
-                inputText += "THREE";
-                break;
-            case '4':
-                inputText += "FOUR";
-                break;
-            case '5':
-                inputText += "FIVE";
-                break;
-            case '6':
-                inputText += "SIX";
-                break;
-            case '7':
-                inputText += "SEVEN";
-                break;
-            case '8':
-                inputText += "EIGHT";
-                break;
-            case '9':
-                inputText += "NINE";
-                break;
-        }
+        inputText += transformChar(inputChar);
 
     }
 
     if (!outputFile.empty()) {
-        cerr << "[warning] output to file ('" << outputFile
+        std::cerr << "[warning] output to file ('" << outputFile
                   << "') not implemented yet, using stdout\n";
     }
 
-    cout << inputText << endl;
+    std::cout << inputText << std::endl;
 
     return 0;
 }
