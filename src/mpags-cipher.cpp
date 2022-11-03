@@ -21,8 +21,9 @@ int main(int argc, char* argv[])
     bool versionRequested{false};
     std::string inputFile{""};
     std::string outputFile{""};
+    int shift{0};
 
-    bool commandLineArgValid{processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile)};
+    bool commandLineArgValid{processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile, shift)};
     if(!commandLineArgValid){std::exit(-1);}
 
     if (helpRequested) {
@@ -37,6 +38,8 @@ int main(int argc, char* argv[])
             << "                   Stdin will be used if not supplied\n\n"
             << "  -o FILE          Write processed text to FILE\n"
             << "                   Stdout will be used if not supplied\n\n"
+            << "  -ccs KEY         Caesar-Cipher-Shift: key to encrypt with\n\n"
+            << "                   to decrypt use reverse sign.\n\n"
             << std::endl;
         return 0;
     }
@@ -64,7 +67,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    std::string cipherText{runCaesarCipher(inputText,2)};
+    std::string cipherText{runCaesarCipher(inputText,shift)};
 
     if (outputFile.empty()){
         std::cout << inputText << std::endl;

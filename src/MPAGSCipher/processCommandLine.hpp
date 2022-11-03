@@ -9,6 +9,7 @@ const std::vector<std::string>& cmdLineArgs,
 bool& helpRequested,
 bool& versionRequested,
 std::string& inputFileName,
-std::string& outputFileName );
+std::string& outputFileName,
+int& shift);
 
 #endif // MAPGCIPHER_PROCESSCOMMANDLINE_HPP

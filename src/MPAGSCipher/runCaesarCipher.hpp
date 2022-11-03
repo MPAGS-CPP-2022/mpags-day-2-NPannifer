@@ -5,6 +5,6 @@
 #include <string>
 #include <algorithm>
 
-std::string runCaesarCipher(std::string input_, int shift_);
+std::string runCaesarCipher(std::string input_,const int shift_);
 
 #endif // MAPGCIPHER_RUNCAESARCIPHER_HPP

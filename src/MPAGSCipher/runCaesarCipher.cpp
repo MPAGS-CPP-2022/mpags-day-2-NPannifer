@@ -5,7 +5,7 @@
 
 #include "runCaesarCipher.hpp"
 
-std::string runCaesarCipher(std::string input_, int shift_){
+std::string runCaesarCipher(std::string input_, const int shift_){
     std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
     std::string output_{""};
     std::vector<int> letterNumbers;
@@ -16,7 +16,14 @@ std::string runCaesarCipher(std::string input_, int shift_){
     }
 
     for (int i : letterNumbers){
-        shiftedLetterNumbers.push_back((i+shift_)%26);
+        if(shift_ > 0){
+            shiftedLetterNumbers.push_back((i+shift_)%26);
+        }else if(shift_ < 0){
+            shiftedLetterNumbers.push_back(25-(25-(i+shift_))%26);
+        }else{
+            shiftedLetterNumbers.push_back(i);
+        }
+
     }
 
     for (int j : shiftedLetterNumbers){

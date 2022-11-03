@@ -9,7 +9,8 @@ const std::vector<std::string>& cmdLineArgs,
 bool& helpRequested,
 bool& versionRequested,
 std::string& inputFileName,
-std::string& outputFileName )
+std::string& outputFileName,
+int& shift)
 {
     const std::size_t nCmdLineArgs{cmdLineArgs.size()};
 
@@ -36,6 +37,15 @@ std::string& outputFileName )
                 return false;
             } else {
                 outputFileName = cmdLineArgs[i + 1];
+                ++i;
+            }
+        } else if (cmdLineArgs[i] == "-ccs") {
+            if (i == nCmdLineArgs - 1) {
+                std::cerr << "[error] -ceasar-cipher-shift requires a key (int) argument"
+                          << std::endl;
+                return false;
+            } else {
+                shift = std::stoi(cmdLineArgs[i + 1]);
                 ++i;
             }
         } else {
