@@ -2,11 +2,12 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 
 #include "TransformChar.hpp"
 #include "processCommandLine.hpp"
-
+#include "runCaesarCipher.hpp"
 
 std::string transformChar( const char in_char );
 
@@ -45,30 +46,36 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    std::cout << inputFile << "    " << outputFile << std::endl;
-
     char inputChar{'x'};
     std::string inputText;
 
+    if (inputFile.empty()){
+        while (std::cin >> inputChar) {
+            inputText += transformChar(inputChar);
+        }
+    }else{
+        std::ifstream in_file {inputFile};
+        bool ok_to_read = in_file.good();
 
-    if (!inputFile.empty()) {
-        std::cerr << "[warning] input from file ('" << inputFile
-                  << "') not implemented yet, using stdin\n";
-    }
+        if(!ok_to_read){std::exit(-1);}
 
-
-    while (std::cin >> inputChar) {
-
+        while (in_file >> inputChar) {
         inputText += transformChar(inputChar);
-
+        }
     }
 
-    if (!outputFile.empty()) {
-        std::cerr << "[warning] output to file ('" << outputFile
-                  << "') not implemented yet, using stdout\n";
-    }
+    std::string cipherText{runCaesarCipher(inputText,2)};
 
-    std::cout << inputText << std::endl;
+    if (outputFile.empty()){
+        std::cout << inputText << std::endl;
+    }else{
+        std::ofstream out_file {outputFile};
+        bool ok_to_write = out_file.good();
+
+        if(!ok_to_write){std::exit(-1);}
+
+        out_file << cipherText;
+    }
 
     return 0;
 }
